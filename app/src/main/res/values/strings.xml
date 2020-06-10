@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">K2A Bluetooth Keyboard</string>
+    <string name="device">Device</string>
+    <string name="keyboard_layout">Keyboard Layout</string>
+</resources>

@@ -1,0 +1,2 @@
+rootProject.name='K2A Bluetooth Keyboard'
+include ':app'
