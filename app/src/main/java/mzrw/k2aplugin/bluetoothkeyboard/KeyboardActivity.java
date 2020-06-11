@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -30,19 +31,28 @@ public class KeyboardActivity extends AppCompatActivity {
 
     private BluetoothDevice selectedDevice;
     private Layout selectedLayout;
+    private List<BluetoothDevice> devices;
 
     private Spinner deviceSpinner;
     private Spinner layoutSpinner;
-
-    KeyboardActivity() {
-
-    }
+    private Button btnConnect;
+    private Button btnSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keyboard);
 
+        deviceSpinner = findViewById(R.id.deviceSpinner);
+        layoutSpinner = findViewById(R.id.layoutSpinner);
+        btnConnect = findViewById(R.id.btnConnect);
+        btnSend = findViewById(R.id.btnSend);
+
+        checkBluetoothEnabled();
+        registerListeners();
+    }
+
+    private void checkBluetoothEnabled() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // bluetooth unsupported
@@ -54,10 +64,20 @@ public class KeyboardActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         } else
             onBluetoothEnabled();
+    }
 
-        deviceSpinner = findViewById(R.id.deviceSpinner);
-        layoutSpinner = findViewById(R.id.layoutSpinner);
+    private void registerListeners() {
+        deviceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedDevice = devices.get(position);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         layoutSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -74,6 +94,9 @@ public class KeyboardActivity extends AppCompatActivity {
 
             }
         });
+        btnConnect.setOnClickListener(this::connectToDevice);
+
+        btnSend.setOnClickListener(v -> hidKeyboard.sendString("test"));
     }
 
     @Override
@@ -92,7 +115,7 @@ public class KeyboardActivity extends AppCompatActivity {
     }
 
     private void onBluetoothEnabled() {
-        final List<BluetoothDevice> devices = new ArrayList<>();
+        devices = new ArrayList<>();
         final List<String> names = new ArrayList<>();
         for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
             devices.add(device);
@@ -101,20 +124,10 @@ public class KeyboardActivity extends AppCompatActivity {
 
         final SpinnerAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
         deviceSpinner.setAdapter(adapter);
-        deviceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedDevice = devices.get(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     public void connectToDevice(View v) {
+        Log.i(TAG, "connecting to "+selectedDevice.getName()+" using keyboard "+selectedLayout.getClass().getSimpleName());
         hidKeyboard = new BluetoothHidKeyboard(getApplicationContext(), selectedLayout, bluetoothAdapter, selectedDevice);
         hidKeyboard.connect();
     }

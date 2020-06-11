@@ -12,6 +12,7 @@ public class UsbReports {
             0x05, 0x01,    /*  USAGE_PAGE (Generic Desktop)		*/
             0x09, 0x06,    /*  USAGE (Keyboard)				*/
             0xa1, 0x01,    /*  COLLECTION (Application)			*/
+            0x85, 0x08,    /*  REPORT_ID (Keyboard)         */
             0x05, 0x07,    /*  USAGE_PAGE (Keyboard)			*/
             0x19, 0xe0,    /*  USAGE_MINIMUM (Keyboard LeftControl)	*/
             0x29, 0xe7,    /*  USAGE_MAXIMUM (Keyboard Right GUI)		*/
@@ -47,7 +48,7 @@ public class UsbReports {
     private static byte[] intArrayToByteArray(int[] intArray) {
         byte[] byteArray = new byte[intArray.length];
         for(int i = 0; i < intArray.length; i++)
-            byteArray[i] = Integer.valueOf(intArray[i]).byteValue();
+            byteArray[i] = (byte)intArray[i];
 
         return byteArray;
     }
@@ -68,7 +69,7 @@ public class UsbReports {
             };
             assert(keystroke.length == BYTES_PER_KEYCODE);
 
-            System.arraycopy(keystroke[i*2], 0, keystrokes, 0, BYTES_PER_KEYCODE);
+            System.arraycopy(keystroke, 0, keystrokes[i*2], 0, BYTES_PER_KEYCODE);
         }
 
         return keystrokes;
