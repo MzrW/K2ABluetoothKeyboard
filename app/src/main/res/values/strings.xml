@@ -1,5 +1,16 @@
 <resources>
+    <string name="title_activity_main">K2A Bluetooth Keyboard</string>
     <string name="app_name">K2A Bluetooth Keyboard</string>
-    <string name="device">Device</string>
     <string name="keyboard_layout">Keyboard Layout</string>
+
+    <string name="device">Device</string>
+    <string name="type">Type to Bluetooth</string>
+
+    <string name="kp2aplugin_title">K2A Bluetooth Keyboard</string>
+    <string name="kp2aplugin_shortdesc">Enter password over bluetooth keyboard</string>
+    <string name="kp2aplugin_author">[mzrw](mzrw)</string>
+
+    <string name="type_user_pass">Type username/password to Bluetooth</string>
+    <string name="type_user_pass_enter">Type username/password/enter to Bluetooth</string>
+    <string name="enable_plugin">Enable Plugin</string>
 </resources>

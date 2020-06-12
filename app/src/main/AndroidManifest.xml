@@ -13,15 +13,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".AuthorizedDevicesActivity" />
-        <activity android:name=".KeyboardActivity">
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AuthorizedDevicesActivity" />
+        <activity android:name=".KeyboardActivity" />
+
+        <receiver
+            android:name=".k2a.PluginAccessReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="keepass2android.ACTION_TRIGGER_REQUEST_ACCESS" />
+                <action android:name="keepass2android.ACTION_RECEIVE_ACCESS" />
+                <action android:name="keepass2android.ACTION_REVOKE_ACCESS" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".k2a.PluginActionReceiver">
+            <intent-filter>
+                <action android:name="keepass2android.ACTION_OPEN_ENTRY" />
+                <action android:name="keepass2android.ACTION_ENTRY_OUTPUT_MODIFIED" />
+                <action android:name="keepass2android.ACTION_ENTRY_ACTION_SELECTED" />
+                <action android:name="keepass2android.ACTION_CLOSE_ENTRY_VIEW" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
