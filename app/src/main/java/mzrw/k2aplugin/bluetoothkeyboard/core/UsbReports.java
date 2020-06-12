@@ -12,7 +12,7 @@ public class UsbReports {
             0x05, 0x01,    /*  USAGE_PAGE (Generic Desktop)		*/
             0x09, 0x06,    /*  USAGE (Keyboard)				*/
             0xa1, 0x01,    /*  COLLECTION (Application)			*/
-            0x85, 0x08,    /*  REPORT_ID (Keyboard)         */
+            0x85, 0x01,    /*  REPORT_ID (Keyboard)         */
             0x05, 0x07,    /*  USAGE_PAGE (Keyboard)			*/
             0x19, 0xe0,    /*  USAGE_MINIMUM (Keyboard LeftControl)	*/
             0x29, 0xe7,    /*  USAGE_MAXIMUM (Keyboard Right GUI)		*/

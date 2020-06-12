@@ -48,7 +48,7 @@ public class BluetoothHidKeyboard implements BluetoothProfile.ServiceListener {
     public void sendString(String string) {
         Log.i(TAG, "sending string "+string);
         for (byte[] report : UsbReports.stringToKeystrokeReports(layout, string))
-            if(!hidDevice.sendReport(device, 0x8, report)) {
+            if(!hidDevice.sendReport(device, 0x1, report)) {
                 Log.w(TAG, "Report is not sent");
         }
     }
@@ -65,6 +65,12 @@ public class BluetoothHidKeyboard implements BluetoothProfile.ServiceListener {
 
         hidDevice = (BluetoothHidDevice) proxy;
 
+        BluetoothHidDeviceAppSdpSettings sdp = new BluetoothHidDeviceAppSdpSettings(
+                "K2A Keyboard",
+                "K2A Plugin Keyboard over Bluetooth",
+                "K2A",
+                BluetoothHidDevice.SUBCLASS1_KEYBOARD,
+                UsbReports.USB_KEYBOARD_REPORT);
         BluetoothHidDeviceAppQosSettings qos = new BluetoothHidDeviceAppQosSettings(
                 BluetoothHidDeviceAppQosSettings.SERVICE_BEST_EFFORT,
                 800,
@@ -73,8 +79,8 @@ public class BluetoothHidKeyboard implements BluetoothProfile.ServiceListener {
                 11250,
                 BluetoothHidDeviceAppQosSettings.MAX
         );
-        BluetoothHidDeviceAppSdpSettings sdp = new BluetoothHidDeviceAppSdpSettings("K2A Keyboard", "K2A Plugin Keyboard over Bluetooth", "K2A", BluetoothHidDevice.SUBCLASS1_KEYBOARD, UsbReports.USB_KEYBOARD_REPORT);
-        hidDevice.registerApp(sdp, null, null, executor, callback);
+
+        hidDevice.registerApp(sdp, null, qos, executor, callback);
     }
 
     @Override
