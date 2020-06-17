@@ -4,12 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/txtPluginState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnEnablePlugin"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="@string/enable_plugin" />
+
+    <Button
+        android:id="@+id/btnSelectAuthorizedDevices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onSelectAuthorizedDevices"
+        android:text="@string/select_authorized_devices" />
+
+    <Button
+        android:id="@+id/btnSendTestString"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send_test_string" />
 </LinearLayout>

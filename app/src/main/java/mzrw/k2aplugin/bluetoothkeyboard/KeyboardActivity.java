@@ -1,10 +1,8 @@
 package mzrw.k2aplugin.bluetoothkeyboard;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.bluetooth.BluetoothAdapter;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,15 +16,16 @@ import android.widget.SpinnerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import mzrw.k2aplugin.bluetoothkeyboard.core.AuthorizedDevicesManager;
 import mzrw.k2aplugin.bluetoothkeyboard.core.BluetoothHidKeyboard;
 import mzrw.k2aplugin.bluetoothkeyboard.layout.KeyboardLayoutFactory;
 import mzrw.k2aplugin.bluetoothkeyboard.layout.Layout;
 
-public class KeyboardActivity extends AppCompatActivity {
+public class KeyboardActivity extends AbstractBluetoothActivity {
     private static final String TAG = KeyboardActivity.class.getName();
-    private static final int REQUEST_ENABLE_BT = 17;
+    public static final String INTENT_EXTRA_STRING_TO_TYPE = "intent_extra_string_to_type";
 
-    private BluetoothAdapter bluetoothAdapter;
+    private AuthorizedDevicesManager authorizedDevicesManager;
     private BluetoothHidKeyboard hidKeyboard;
 
     private BluetoothDevice selectedDevice;
@@ -36,34 +35,32 @@ public class KeyboardActivity extends AppCompatActivity {
     private Spinner deviceSpinner;
     private Spinner layoutSpinner;
     private Button btnConnect;
-    private Button btnSend;
+
+    public static void startActivityToSendText(Context context, String text) {
+        final boolean isActivityContext = context instanceof Activity;
+        if(!isActivityContext)
+            context = context.getApplicationContext();
+
+        final Intent intent = new Intent(context, KeyboardActivity.class);
+        intent.putExtra(INTENT_EXTRA_STRING_TO_TYPE, text);
+        if(!isActivityContext)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keyboard);
+        authorizedDevicesManager = new AuthorizedDevicesManager(this);
 
         deviceSpinner = findViewById(R.id.deviceSpinner);
         layoutSpinner = findViewById(R.id.layoutSpinner);
         btnConnect = findViewById(R.id.btnConnect);
-        btnSend = findViewById(R.id.btnSend);
 
         checkBluetoothEnabled();
         registerListeners();
-    }
-
-    private void checkBluetoothEnabled() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            // bluetooth unsupported
-            return;
-        }
-
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        } else
-            onBluetoothEnabled();
     }
 
     private void registerListeners() {
@@ -95,29 +92,13 @@ public class KeyboardActivity extends AppCompatActivity {
             }
         });
         btnConnect.setOnClickListener(this::connectToDevice);
-
-        btnSend.setOnClickListener(v -> hidKeyboard.sendString("test"));
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK) {
-            onBluetoothEnabled();
-        }
-    }
-
-    private void onBluetoothEnabled() {
+    protected void onBluetoothEnabled() {
         devices = new ArrayList<>();
         final List<String> names = new ArrayList<>();
-        for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
+        for (BluetoothDevice device : authorizedDevicesManager.filterAuthorizedDevices(bluetoothAdapter.getBondedDevices())) {
             devices.add(device);
             names.add(device.getName());
         }

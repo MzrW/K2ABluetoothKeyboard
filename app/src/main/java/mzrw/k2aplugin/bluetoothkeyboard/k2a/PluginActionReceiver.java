@@ -2,6 +2,7 @@ package mzrw.k2aplugin.bluetoothkeyboard.k2a;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import keepass2android.pluginsdk.KeepassDefs;
 import keepass2android.pluginsdk.PluginAccessException;
 import keepass2android.pluginsdk.PluginActionBroadcastReceiver;
 import keepass2android.pluginsdk.Strings;
+import mzrw.k2aplugin.bluetoothkeyboard.KeyboardActivity;
 import mzrw.k2aplugin.bluetoothkeyboard.R;
 
 public class PluginActionReceiver extends PluginActionBroadcastReceiver {
@@ -48,34 +50,37 @@ public class PluginActionReceiver extends PluginActionBroadcastReceiver {
     @Override
     protected void actionSelected(ActionSelectedAction actionSelected) {
         final Context ctx = actionSelected.getContext();
-        final String text = extractStringToTypeFromBundle(actionSelected);
+        final String text = extractTextToTypeFromBundle(actionSelected);
+
+        if(!TextUtils.isEmpty(text))
+            type(ctx, text);
 
         Toast.makeText(ctx, "Typing "+text, Toast.LENGTH_LONG).show();
     }
 
-    private String extractStringToTypeFromBundle(ActionSelectedAction actionSelected) {
-        final StringBuilder stringBuilder = new StringBuilder();
+    private String extractTextToTypeFromBundle(ActionSelectedAction actionSelected) {
+        final StringBuilder text = new StringBuilder();
 
         if(actionSelected.isEntryAction()) {
             final Bundle data = actionSelected.getActionData();
             if(data.containsKey(BUNDLE_KEY_USERNAME))
-                stringBuilder.append(actionSelected.getEntryFields().get(KeepassDefs.UserNameField));
+                text.append(actionSelected.getEntryFields().get(KeepassDefs.UserNameField));
             if(data.containsKey(BUNDLE_KEY_PASSWORD)) {
                 if(data.containsKey(BUNDLE_KEY_USERNAME))
-                    stringBuilder.append('\t');
-                stringBuilder.append(actionSelected.getEntryFields().get(KeepassDefs.PasswordField));
+                    text.append('\t');
+                text.append(actionSelected.getEntryFields().get(KeepassDefs.PasswordField));
             }
             if(data.containsKey(BUNDLE_KEY_ENTER))
-                stringBuilder.append('\n');
-
-            if(stringBuilder.length() > 0) {
-
-            }
+                text.append('\n');
         } else {
             final String fieldKey = actionSelected.getFieldId().substring(Strings.PREFIX_STRING.length());
-            stringBuilder.append(actionSelected.getEntryFields().get(fieldKey));
+            text.append(actionSelected.getEntryFields().get(fieldKey));
         }
 
-        return stringBuilder.toString();
+        return text.toString();
+    }
+
+    private void type(Context context, String text) {
+        KeyboardActivity.startActivityToSendText(context, text);
     }
 }

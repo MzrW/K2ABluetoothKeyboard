@@ -12,5 +12,13 @@
 
     <string name="type_user_pass">Type username/password to Bluetooth</string>
     <string name="type_user_pass_enter">Type username/password/enter to Bluetooth</string>
+
+    <!-- MAIN ACTIVITY -->
+    <string name="send_test_string">Send Test String</string>
     <string name="enable_plugin">Enable Plugin</string>
+    <string name="toast_plugin_successfully_activated">Plugin successfully activated</string>
+    <string name="plugin_state_enabled">Plugin is activated</string>
+    <string name="plugin_state_disabled">Plugin is not yet activated</string>
+    <string name="select_authorized_devices">Select authorized devices</string>
+    <string name="authorized_devices">Authorized Devices</string>
 </resources>
