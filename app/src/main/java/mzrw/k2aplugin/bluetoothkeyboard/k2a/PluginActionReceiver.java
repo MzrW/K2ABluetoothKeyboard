@@ -2,15 +2,13 @@ package mzrw.k2aplugin.bluetoothkeyboard.k2a;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import keepass2android.pluginsdk.KeepassDefs;
 import keepass2android.pluginsdk.PluginAccessException;
 import keepass2android.pluginsdk.PluginActionBroadcastReceiver;
 import keepass2android.pluginsdk.Strings;
-import mzrw.k2aplugin.bluetoothkeyboard.KeyboardActivity;
+import mzrw.k2aplugin.bluetoothkeyboard.NotificationUtility;
 import mzrw.k2aplugin.bluetoothkeyboard.R;
 
 public class PluginActionReceiver extends PluginActionBroadcastReceiver {
@@ -52,10 +50,7 @@ public class PluginActionReceiver extends PluginActionBroadcastReceiver {
         final Context ctx = actionSelected.getContext();
         final String text = extractTextToTypeFromBundle(actionSelected);
 
-        if(!TextUtils.isEmpty(text))
-            type(ctx, text);
-
-        Toast.makeText(ctx, "Typing "+text, Toast.LENGTH_LONG).show();
+        new NotificationUtility(ctx).notifyTextAvailable(text);
     }
 
     private String extractTextToTypeFromBundle(ActionSelectedAction actionSelected) {
@@ -78,9 +73,5 @@ public class PluginActionReceiver extends PluginActionBroadcastReceiver {
         }
 
         return text.toString();
-    }
-
-    private void type(Context context, String text) {
-        KeyboardActivity.startActivityToSendText(context, text);
     }
 }

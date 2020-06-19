@@ -19,6 +19,7 @@ import keepass2android.pluginsdk.Strings;
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_REGISTER_PLUGIN = 0x748;
     private static final String TEST_STRING = "test";
+
     private TextView txtPluginState;
     private Button btnEnablePlugin;
 
@@ -27,12 +28,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final NotificationUtility notificationUtility = new NotificationUtility(this);
+        notificationUtility.registerNotificationChannel();
+
         txtPluginState = findViewById(R.id.txtPluginState);
         btnEnablePlugin = findViewById(R.id.btnEnablePlugin);
         final Button btnSendTestString = findViewById(R.id.btnSendTestString);
 
+        updateUIPluginState();
         btnEnablePlugin.setOnClickListener((v) -> onBtnEnableClicked());
-        btnSendTestString.setOnClickListener((v) -> KeyboardActivity.startActivityToSendText(MainActivity.this, TEST_STRING));
+        btnSendTestString.setOnClickListener((v) -> {
+            final Intent intent =  new Intent(MainActivity.this, KeyboardActivity.class);
+            intent.putExtra(KeyboardActivity.INTENT_EXTRA_STRING_TO_TYPE, "test");
+            startActivity(intent);
+        });
     }
 
     private void onBtnEnableClicked() {
@@ -70,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPluginEnabled() {
         final ArrayList<String> scopes = new ArrayList<>();
         scopes.add(Strings.SCOPE_CURRENT_ENTRY);
-        final String accessToken = AccessManager.tryGetAccessToken(getApplicationContext(), getPackageName(), scopes);
+        final String accessToken = AccessManager.tryGetAccessToken(getApplicationContext(), "keepass2android.keepass2android", scopes);
 
         return accessToken != null;
     }

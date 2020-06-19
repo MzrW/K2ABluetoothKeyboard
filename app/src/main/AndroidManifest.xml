@@ -26,8 +26,7 @@
         <activity android:name=".KeyboardActivity" />
 
         <receiver
-            android:name=".k2a.PluginAccessReceiver"
-            android:exported="true">
+            android:name=".k2a.PluginAccessReceiver">
             <intent-filter>
                 <action android:name="keepass2android.ACTION_TRIGGER_REQUEST_ACCESS" />
                 <action android:name="keepass2android.ACTION_RECEIVE_ACCESS" />

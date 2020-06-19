@@ -1,9 +1,6 @@
 package mzrw.k2aplugin.bluetoothkeyboard;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,19 +34,6 @@ public class KeyboardActivity extends AbstractBluetoothActivity implements HidSe
     private Spinner layoutSpinner;
     private Button btnConnect;
     private TextView txtState;
-
-    public static void startActivityToSendText(Context context, String text) {
-        final boolean isActivityContext = context instanceof Activity;
-        if (!isActivityContext)
-            context = context.getApplicationContext();
-
-        final Intent intent = new Intent(context, KeyboardActivity.class);
-        intent.putExtra(INTENT_EXTRA_STRING_TO_TYPE, text);
-        if (!isActivityContext)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        context.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +105,7 @@ public class KeyboardActivity extends AbstractBluetoothActivity implements HidSe
     public void onStateChanged(int state) {
         switch (state) {
             case HidService.STATE_DISCONNECTED:
-                finish();
+                finishAndRemoveTask();
                 break;
             case HidService.STATE_CONNECTING:
                 txtState.setText("Connecting");

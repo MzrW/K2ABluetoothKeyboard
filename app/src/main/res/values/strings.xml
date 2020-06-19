@@ -21,4 +21,9 @@
     <string name="plugin_state_disabled">Plugin is not yet activated</string>
     <string name="select_authorized_devices">Select authorized devices</string>
     <string name="authorized_devices">Authorized Devices</string>
+
+    <!-- Notifications -->
+    <string name="notification_entry_available">Entry available to type</string>
+    <string name="notification_channel_name">Entries available</string>
+    <string name="notification_channel_description">Notification channel for the K2A Bluetooth Keyboard plugin for keepass2android</string>
 </resources>
