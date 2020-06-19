@@ -12,21 +12,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mzrw.k2aplugin.bluetoothkeyboard.core.AuthorizedDevicesManager;
-import mzrw.k2aplugin.bluetoothkeyboard.core.BluetoothHidKeyboard;
+import mzrw.k2aplugin.bluetoothkeyboard.core.HidService;
 import mzrw.k2aplugin.bluetoothkeyboard.layout.KeyboardLayoutFactory;
 import mzrw.k2aplugin.bluetoothkeyboard.layout.Layout;
 
-public class KeyboardActivity extends AbstractBluetoothActivity {
+public class KeyboardActivity extends AbstractBluetoothActivity implements HidService.StateChangeListener {
     private static final String TAG = KeyboardActivity.class.getName();
     public static final String INTENT_EXTRA_STRING_TO_TYPE = "intent_extra_string_to_type";
 
     private AuthorizedDevicesManager authorizedDevicesManager;
-    private BluetoothHidKeyboard hidKeyboard;
+    private HidService hidService;
 
     private BluetoothDevice selectedDevice;
     private Layout selectedLayout;
@@ -35,15 +36,16 @@ public class KeyboardActivity extends AbstractBluetoothActivity {
     private Spinner deviceSpinner;
     private Spinner layoutSpinner;
     private Button btnConnect;
+    private TextView txtState;
 
     public static void startActivityToSendText(Context context, String text) {
         final boolean isActivityContext = context instanceof Activity;
-        if(!isActivityContext)
+        if (!isActivityContext)
             context = context.getApplicationContext();
 
         final Intent intent = new Intent(context, KeyboardActivity.class);
         intent.putExtra(INTENT_EXTRA_STRING_TO_TYPE, text);
-        if(!isActivityContext)
+        if (!isActivityContext)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         context.startActivity(intent);
@@ -54,10 +56,12 @@ public class KeyboardActivity extends AbstractBluetoothActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keyboard);
         authorizedDevicesManager = new AuthorizedDevicesManager(this);
+        hidService = new HidService(getApplicationContext(), bluetoothAdapter);
 
         deviceSpinner = findViewById(R.id.deviceSpinner);
         layoutSpinner = findViewById(R.id.layoutSpinner);
         btnConnect = findViewById(R.id.btnConnect);
+        txtState = findViewById(R.id.txtState);
 
         checkBluetoothEnabled();
         registerListeners();
@@ -92,6 +96,7 @@ public class KeyboardActivity extends AbstractBluetoothActivity {
             }
         });
         btnConnect.setOnClickListener(this::connectToDevice);
+        hidService.setOnStateChangeListener(this);
     }
 
     @Override
@@ -108,8 +113,33 @@ public class KeyboardActivity extends AbstractBluetoothActivity {
     }
 
     public void connectToDevice(View v) {
-        Log.i(TAG, "connecting to "+selectedDevice.getName()+" using keyboard "+selectedLayout.getClass().getSimpleName());
-        hidKeyboard = new BluetoothHidKeyboard(getApplicationContext(), selectedLayout, bluetoothAdapter, selectedDevice);
-        hidKeyboard.connect();
+        Log.i(TAG, "connecting to " + selectedDevice.getName() + " using keyboard " + selectedLayout.getClass().getSimpleName());
+        hidService.connect(selectedDevice, selectedLayout);
+    }
+
+    @Override
+    public void onStateChanged(int state) {
+        switch (state) {
+            case HidService.STATE_DISCONNECTED:
+                finish();
+                break;
+            case HidService.STATE_CONNECTING:
+                txtState.setText("Connecting");
+                break;
+            case HidService.STATE_CONNECTED:
+                txtState.setText("Connected");
+                hidService.sendText(getIntent().getStringExtra(INTENT_EXTRA_STRING_TO_TYPE));
+                break;
+            case HidService.STATE_SENDING:
+                txtState.setText("Sending");
+                break;
+            case HidService.STATE_SENT:
+                txtState.setText("Sent");
+                hidService.disconnect();
+                break;
+            case HidService.STATE_DISCONNECTING:
+                txtState.setText("Disconnecting");
+                break;
+        }
     }
 }
