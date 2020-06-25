@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,32 +22,56 @@ import mzrw.k2aplugin.bluetoothkeyboard.core.AuthorizedDevicesManager;
 
 public class AuthorizedDevicesActivity extends AbstractBluetoothActivity {
     private AuthorizedDevicesManager authorizedDevicesManager;
-    private RecyclerView recyclerViewAuthroizedDevices;
-    private RecyclerView.Adapter adapter;
+    private RecyclerView recyclerViewAuthorizedDevices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorized_devices);
 
-        recyclerViewAuthroizedDevices = findViewById(R.id.recyclerViewAuthroizedDevices);
+        recyclerViewAuthorizedDevices = findViewById(R.id.recyclerViewAuthroizedDevices);
 
-        recyclerViewAuthroizedDevices.setHasFixedSize(true);
-        recyclerViewAuthroizedDevices.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewAuthorizedDevices.setHasFixedSize(true);
+        recyclerViewAuthorizedDevices.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewAuthorizedDevices.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
 
         authorizedDevicesManager = new AuthorizedDevicesManager(this);
-        if(bluetoothAdapter != null) {
-            final List<BluetoothDevice> bluetoothDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
-            adapter = new AuthorizedDevicesAdapter(bluetoothDevices);
-            recyclerViewAuthroizedDevices.setAdapter(adapter);
-        }
 
+        checkBluetoothEnabled();
+    }
+
+    @Override
+    protected void onBluetoothEnabled() {
+        super.onBluetoothEnabled();
+
+        setAuthorizedDevicesAdapter();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        authorizedDevicesManager.saveAuthorizedDevices();
+    }
+
+    private void setAuthorizedDevicesAdapter() {
+        final List<BluetoothDevice> bluetoothDevices = new ArrayList<>(bluetoothAdapter.getBondedDevices());
+        bluetoothDevices.sort(this::compareBluetoothDevices);
+        recyclerViewAuthorizedDevices.setAdapter(new AuthorizedDevicesAdapter(bluetoothDevices));
+    }
+
+    private int compareBluetoothDevices(BluetoothDevice a, BluetoothDevice b) {
+        int comparison = Boolean.compare(authorizedDevicesManager.isDeviceAuthorized(b), authorizedDevicesManager.isDeviceAuthorized(a));
+        if(comparison != 0)
+            return comparison;
+
+        return a.getName().compareTo(b.getName());
     }
 
     class AuthorizedDevicesAdapter extends RecyclerView.Adapter<AuthorizedDeviceViewHolder> {
         private final List<BluetoothDevice> devices;
 
-        public AuthorizedDevicesAdapter(List<BluetoothDevice> devices) {
+        private AuthorizedDevicesAdapter(List<BluetoothDevice> devices) {
             this.devices = devices;
         }
 
@@ -77,7 +101,7 @@ public class AuthorizedDevicesActivity extends AbstractBluetoothActivity {
         private final Switch switchAuthorizedDeviceAuthorized;
 
 
-        public AuthorizedDeviceViewHolder(View itemView) {
+        private AuthorizedDeviceViewHolder(View itemView) {
             super(itemView);
 
             txtAuthorizedDeviceName = itemView.findViewById(R.id.txtAuthorizedDeviceName);
@@ -87,7 +111,7 @@ public class AuthorizedDevicesActivity extends AbstractBluetoothActivity {
             switchAuthorizedDeviceAuthorized.setOnCheckedChangeListener(this);
         }
 
-        public void setBluetoothDevice(BluetoothDevice bluetoothDevice) {
+        private void setBluetoothDevice(BluetoothDevice bluetoothDevice) {
             this.bluetoothDevice = bluetoothDevice;
 
             txtAuthorizedDeviceName.setText(bluetoothDevice.getName());

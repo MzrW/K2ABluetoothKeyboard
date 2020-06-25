@@ -1,11 +1,7 @@
 <resources>
-    <string name="title_activity_main">K2A Bluetooth Keyboard</string>
     <string name="app_name">K2A Bluetooth Keyboard</string>
-    <string name="keyboard_layout">Keyboard Layout</string>
 
-    <string name="device">Device</string>
-    <string name="type">Type to Bluetooth</string>
-
+    <!-- K2A -->
     <string name="kp2aplugin_title">K2A Bluetooth Keyboard</string>
     <string name="kp2aplugin_shortdesc">Enter password over bluetooth keyboard</string>
     <string name="kp2aplugin_author">[mzrw](mzrw)</string>
@@ -13,16 +9,25 @@
     <string name="type_user_pass">Type username/password to Bluetooth</string>
     <string name="type_user_pass_enter">Type username/password/enter to Bluetooth</string>
 
+    <!-- KEYBOARD ACTIVITY -->
+    <string name="title_activity_keyboard">Bluetooth Keyboard</string>
+    <string name="device">Device</string>
+    <string name="keyboard_layout">Keyboard Layout</string>
+    <string name="no_authorized_devices">No devices authorized => Select some</string>
+
+    <!-- AUTHORIZED DEVICES ACTIVITY -->
+    <string name="title_activity_authorized_devices">Authorized Devices</string>
+
     <!-- MAIN ACTIVITY -->
+    <string name="title_activity_main">K2A Bluetooth Keyboard</string>
     <string name="send_test_string">Send Test String</string>
     <string name="enable_plugin">Enable Plugin</string>
     <string name="toast_plugin_successfully_activated">Plugin successfully activated</string>
     <string name="plugin_state_enabled">Plugin is activated</string>
     <string name="plugin_state_disabled">Plugin is not yet activated</string>
     <string name="select_authorized_devices">Select authorized devices</string>
-    <string name="authorized_devices">Authorized Devices</string>
 
-    <!-- Notifications -->
+    <!-- NOTIFICATIONS -->
     <string name="notification_entry_available">Entry available to type</string>
     <string name="notification_channel_name">Entries available</string>
     <string name="notification_channel_description">Notification channel for the K2A Bluetooth Keyboard plugin for keepass2android</string>

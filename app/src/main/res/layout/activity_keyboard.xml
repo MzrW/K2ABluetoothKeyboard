@@ -19,6 +19,13 @@
             android:inputType="textPersonName"
             android:text="@string/device" />
 
+        <Button
+            android:id="@+id/btnNoDevicesAuthorized"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_authorized_devices"
+            android:visibility="gone" />
+
         <Spinner
             android:id="@+id/deviceSpinner"
             android:layout_width="match_parent"

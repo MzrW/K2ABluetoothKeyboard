@@ -26,7 +26,7 @@ public class PluginActionReceiver extends PluginActionBroadcastReceiver {
                 oe.addEntryFieldAction("mzrw.k2aplugin.bluetoothkeyboard.type",
                         Strings.PREFIX_STRING + field,
                         "Type to Bluetooth",
-                        R.drawable.ic_launcher_foreground,
+                        R.drawable.notification_icon_grey,
                         new Bundle());
             }
             final Bundle type_user_pass = new Bundle();
@@ -38,8 +38,8 @@ public class PluginActionReceiver extends PluginActionBroadcastReceiver {
             type_user_pass_enter.putBoolean(BUNDLE_KEY_PASSWORD, true);
             type_user_pass_enter.putBoolean(BUNDLE_KEY_ENTER, true);
 
-            oe.addEntryAction(ctx.getString(R.string.type_user_pass), R.drawable.ic_launcher_foreground, type_user_pass);
-            oe.addEntryAction(ctx.getString(R.string.type_user_pass_enter), R.drawable.ic_launcher_foreground, type_user_pass_enter);
+            oe.addEntryAction(ctx.getString(R.string.type_user_pass), R.drawable.notification_icon_grey, type_user_pass);
+            oe.addEntryAction(ctx.getString(R.string.type_user_pass_enter), R.drawable.notification_icon_grey, type_user_pass_enter);
         } catch(PluginAccessException e) {
             Log.e(TAG, "Failed to register actions for entries: "+e.getMessage(), e);
         }

@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
 import androidx.core.app.NotificationManagerCompat;
 
@@ -34,7 +33,8 @@ public class NotificationUtility {
         final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final Notification notification = new Notification.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.notification_icon_grey)
+                .setBadgeIconType(Notification.BADGE_ICON_SMALL)
                 .setContentTitle(context.getString(R.string.notification_entry_available))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

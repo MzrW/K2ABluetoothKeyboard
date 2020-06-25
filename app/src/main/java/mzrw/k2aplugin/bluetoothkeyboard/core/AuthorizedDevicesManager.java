@@ -12,10 +12,13 @@ import java.util.stream.Collectors;
 public class AuthorizedDevicesManager {
     private static final String AUTHORIZED_DEVICES_PREFERENCES_NAME = "authorized_devices";
     private static final String AUTHORIZED_DEVICES = "authorized_devices";
-    private final Context context;
+
+    private final SharedPreferences preferences;
+    private final Set<String> authorizedDevices = new HashSet<>();
 
     public AuthorizedDevicesManager(Context context) {
-        this.context = context;
+        preferences = context.getSharedPreferences(AUTHORIZED_DEVICES_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        authorizedDevices.addAll(preferences.getStringSet(AUTHORIZED_DEVICES, new HashSet<>()));
     }
 
     public boolean isDeviceAuthorized(BluetoothDevice device) {
@@ -24,35 +27,23 @@ public class AuthorizedDevicesManager {
         if(device.getBondState() != BluetoothDevice.BOND_BONDED)
             return false;
         final String address = device.getAddress();
-        return getAuthorizedDeviceAddresses().contains(address);
+        return authorizedDevices.contains(address);
     }
 
     public void setAuthorizationState(BluetoothDevice device, boolean authorized) {
-        final SharedPreferences sharedPreferences = getSharedPreferences();
-
-        final Set<String> authorizedDevices = getAuthorizedDeviceAddresses();
-
         if(authorized)
             authorizedDevices.add(device.getAddress());
         else
             authorizedDevices.remove(device.getAddress());
-
-        sharedPreferences.edit().putStringSet(AUTHORIZED_DEVICES, authorizedDevices).apply();
     }
 
-    private Set<String> getAuthorizedDeviceAddresses() {
-        final SharedPreferences authorizedDevicesPreferences = getSharedPreferences();
-
-        return authorizedDevicesPreferences.getStringSet(AUTHORIZED_DEVICES, new HashSet<>());
-    }
-
-    public List<BluetoothDevice> filterAuthorizedDevices(Set<BluetoothDevice> authorizedDevices) {
-        return authorizedDevices.stream()
+    public List<BluetoothDevice> filterAuthorizedDevices(Set<BluetoothDevice> bluetoothDevices) {
+        return bluetoothDevices.stream()
                 .filter(this::isDeviceAuthorized)
                 .collect(Collectors.toList());
     }
 
-    private SharedPreferences getSharedPreferences() {
-        return context.getSharedPreferences(AUTHORIZED_DEVICES_PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public void saveAuthorizedDevices() {
+        preferences.edit().putStringSet(AUTHORIZED_DEVICES_PREFERENCES_NAME, authorizedDevices).apply();
     }
 }
