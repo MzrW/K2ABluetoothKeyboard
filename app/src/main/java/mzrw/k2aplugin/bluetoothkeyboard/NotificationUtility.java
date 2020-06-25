@@ -13,6 +13,7 @@ public class NotificationUtility {
     public static final String CHANNEL_ID = "k2a_bluetooth_channel";
     public static final int NOTIFICATION_ID_KEYBOARD = 1;
     public static final int NOTIFICATION_TIMEOUT_MS = 30_000;
+
     private final Context context;
 
     public NotificationUtility(Context context) {
@@ -22,6 +23,7 @@ public class NotificationUtility {
     public void registerNotificationChannel() {
         final NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, context.getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
         notificationChannel.setDescription(context.getString(R.string.notification_channel_description));
+        notificationChannel.enableVibration(false);
 
         context.getSystemService(NotificationManager.class).createNotificationChannel(notificationChannel);
     }
@@ -34,11 +36,10 @@ public class NotificationUtility {
 
         final Notification notification = new Notification.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon_grey)
-                .setBadgeIconType(Notification.BADGE_ICON_SMALL)
                 .setContentTitle(context.getString(R.string.notification_entry_available))
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
+                .setFullScreenIntent(pendingIntent, true)
                 .setTimeoutAfter(NOTIFICATION_TIMEOUT_MS)
+                .setAutoCancel(true)
                 .build();
 
         NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_KEYBOARD, notification);
