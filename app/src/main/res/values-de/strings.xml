@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">K2A Bluetooth Keyboard</string>
+    <string name="kp2aplugin_shortdesc">Passworteingabe über Bluetooth</string>
+    <string name="type_user_pass">Tippe Username/Passwort über Bluetooth ein</string>
+    <string name="type_user_pass_enter">Tippe Username/Passwort/Enter über Bluetooth ein</string>
+    <string name="no_authorized_devices">Keine Empfänger authorisiert => Wähle welche aus</string>
+    <string name="title_activity_authorized_devices">Authorisierte Empfänger</string>
+    <string name="enable_plugin">Plugin aktivieren</string>
+    <string name="toast_plugin_successfully_activated">Plugin wurde erfolgreich aktiviert</string>
+    <string name="plugin_state_enabled">Plugin ist aktiviert</string>
+    <string name="plugin_state_disabled">Plugin ist nicht aktiviert</string>
+    <string name="select_authorized_devices">Wähle authorisierte Empfänger aus</string>
+    <string name="notification_entry_available">Eintrag zur Eingabe bereit</string>
+    <string name="notification_channel_name">Einträge verfügbar</string>
+    <string name="notification_channel_description">Benachrichtigungskanal für Einträge die zur Eingabe bereit sind</string>
+    <string name="keyboard_layout">Tastaturlayout</string>
+    <string name="device">Empfänger</string>
+    <string name="send_test_string">Tippe Test-Eintrag ein</string>
+    <string name="type_entry">Tippe Eintrag ein</string>
+</resources>

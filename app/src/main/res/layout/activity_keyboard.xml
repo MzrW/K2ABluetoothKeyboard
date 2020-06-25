@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".KeyboardActivity">
 
-    <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:orientation="vertical">
 
         <TextView
             android:id="@+id/device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
             android:text="@string/device" />
 
         <Button
@@ -36,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
             android:text="@string/keyboard_layout" />
 
         <Spinner
@@ -49,11 +43,10 @@
             android:id="@+id/btnConnect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Connect" />
+            android:text="@string/type_entry" />
 
         <TextView
             android:id="@+id/txtState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
-</FrameLayout>

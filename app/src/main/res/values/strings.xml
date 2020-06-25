@@ -14,6 +14,7 @@
     <string name="device">Device</string>
     <string name="keyboard_layout">Keyboard Layout</string>
     <string name="no_authorized_devices">No devices authorized => Select some</string>
+    <string name="type_entry">Type entry</string>
 
     <!-- AUTHORIZED DEVICES ACTIVITY -->
     <string name="title_activity_authorized_devices">Authorized Devices</string>
