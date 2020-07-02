@@ -38,6 +38,7 @@ public class NotificationUtility {
                 .setSmallIcon(R.drawable.notification_icon_grey)
                 .setContentTitle(context.getString(R.string.notification_entry_available))
                 .setFullScreenIntent(pendingIntent, true)
+                .setContentIntent(pendingIntent)
                 .setTimeoutAfter(NOTIFICATION_TIMEOUT_MS)
                 .setAutoCancel(true)
                 .build();

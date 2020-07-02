@@ -61,6 +61,7 @@ public class KeyboardActivity extends AbstractBluetoothActivity implements HidSe
     protected void onResume() {
         super.onResume();
 
+        updateSelectionFromPreferences();
         checkBluetoothEnabled();
     }
 
@@ -112,14 +113,15 @@ public class KeyboardActivity extends AbstractBluetoothActivity implements HidSe
     }
 
     private void updateSelectionFromPreferences() {
-        selectedDevice = selectedEntriesPreferences.getString(BUNDLE_KEY_SELECTED_DEVICE, null);
+        if(devices != null) {
+            selectedDevice = selectedEntriesPreferences.getString(BUNDLE_KEY_SELECTED_DEVICE, null);
+            IntStream.range(0, devices.size())
+                    .filter(index -> devices.get(index).getAddress().equals(selectedDevice))
+                    .findAny()
+                    .ifPresent(index -> deviceSpinner.setSelection(index));
+        }
+
         selectedLayout = selectedEntriesPreferences.getString(BUNDLE_KEY_SELECTED_LAYOUT, null);
-
-        IntStream.range(0, devices.size())
-                .filter(index -> devices.get(index).getAddress().equals(selectedDevice))
-                .findAny()
-                .ifPresent(index -> deviceSpinner.setSelection(index));
-
         final String[] layouts = getResources().getStringArray(R.array.layout_list);
         IntStream.range(0, layouts.length)
                 .filter(index -> layouts[index].equals(selectedLayout))
