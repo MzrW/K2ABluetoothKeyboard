@@ -18,7 +18,6 @@ import keepass2android.pluginsdk.Strings;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_REGISTER_PLUGIN = 0x748;
-    private static final String TEST_STRING = "test";
 
     private TextView txtPluginState;
     private Button btnEnablePlugin;

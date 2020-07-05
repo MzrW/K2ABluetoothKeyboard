@@ -9,6 +9,10 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationManagerCompat;
 
+/**
+ * This Utility is used to open the {@link KeyboardActivity} from a BroadcastReceiver.
+ * As in new versions of android, background tasks can't open activities anymore, creating a notification is required.
+ */
 public class NotificationUtility {
     public static final String CHANNEL_ID = "k2a_bluetooth_channel";
     public static final int NOTIFICATION_ID_KEYBOARD = 1;
@@ -20,7 +24,7 @@ public class NotificationUtility {
         this.context = context;
     }
 
-    public void registerNotificationChannel() {
+    private void registerNotificationChannel() {
         final NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, context.getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
         notificationChannel.setDescription(context.getString(R.string.notification_channel_description));
         notificationChannel.enableVibration(false);
@@ -28,6 +32,10 @@ public class NotificationUtility {
         context.getSystemService(NotificationManager.class).createNotificationChannel(notificationChannel);
     }
 
+    /**
+     * Create a fullscreen intent notification to open the {@link KeyboardActivity} to send the given text.
+     * @param text the given text to be sent
+     */
     public void notifyTextAvailable(String text) {
         final Intent intent = new Intent(context, KeyboardActivity.class);
         intent.putExtra(KeyboardActivity.INTENT_EXTRA_STRING_TO_TYPE, text);

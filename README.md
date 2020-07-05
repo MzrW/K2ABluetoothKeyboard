@@ -16,6 +16,6 @@ Useful resources:
 ``` bash
 git clone ${..this..repo..}
 git submodule update --init
-# make sure you have installed the android sdk
+# make sure you have the android sdk installed
 ./gradlew assembleDebug
 ```

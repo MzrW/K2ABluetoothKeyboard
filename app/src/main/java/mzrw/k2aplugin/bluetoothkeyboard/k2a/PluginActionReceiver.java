@@ -11,12 +11,19 @@ import keepass2android.pluginsdk.Strings;
 import mzrw.k2aplugin.bluetoothkeyboard.NotificationUtility;
 import mzrw.k2aplugin.bluetoothkeyboard.R;
 
+/**
+ * BroadcastReceiver to "talk" to the keepass2android-Application.
+ */
 public class PluginActionReceiver extends PluginActionBroadcastReceiver {
     private static final String TAG = PluginActionReceiver.class.getName();
     public static final String BUNDLE_KEY_USERNAME = "username";
     public static final String BUNDLE_KEY_PASSWORD = "password";
     public static final String BUNDLE_KEY_ENTER = "enter";
 
+    /**
+     * Add some actions to the opened entry in keepass2android.
+     * @param oe the {@link keepass2android.pluginsdk.PluginActionBroadcastReceiver.OpenEntryAction}
+     */
     @Override
     protected void openEntry(OpenEntryAction oe) {
         final Context ctx = oe.getContext();
@@ -45,6 +52,11 @@ public class PluginActionReceiver extends PluginActionBroadcastReceiver {
         }
     }
 
+    /**
+     * An action registered in {@link #openEntry(OpenEntryAction)} was selected.
+     * Create a notification to send the text from the action to a bluetooth device.
+     * @param actionSelected the selected action.
+     */
     @Override
     protected void actionSelected(ActionSelectedAction actionSelected) {
         final Context ctx = actionSelected.getContext();
@@ -53,6 +65,11 @@ public class PluginActionReceiver extends PluginActionBroadcastReceiver {
         new NotificationUtility(ctx).notifyTextAvailable(text);
     }
 
+    /**
+     * Extract the text to type/send from the selected action
+     * @param actionSelected the selected action
+     * @return the text to type
+     */
     private String extractTextToTypeFromBundle(ActionSelectedAction actionSelected) {
         final StringBuilder text = new StringBuilder();
 

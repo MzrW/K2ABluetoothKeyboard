@@ -7,6 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Abstract Activity to ensure bluetooth is activated.
+ */
 public abstract class AbstractBluetoothActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 17;
 
@@ -19,6 +22,9 @@ public abstract class AbstractBluetoothActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
+    /**
+     * Call this method to check that bluetooth is enabled in {@link #onCreate(Bundle)}.
+     */
     protected void checkBluetoothEnabled() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -33,6 +39,7 @@ public abstract class AbstractBluetoothActivity extends AppCompatActivity {
             onBluetoothEnabled();
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -41,6 +48,10 @@ public abstract class AbstractBluetoothActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is called when bluetooth is activated.
+     * Overwrite this method to take some action when bluetooth is enabled.
+     */
     protected void onBluetoothEnabled() {
 
     }
