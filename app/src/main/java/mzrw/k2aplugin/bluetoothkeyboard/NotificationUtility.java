@@ -14,9 +14,9 @@ import androidx.core.app.NotificationManagerCompat;
  * As in new versions of android, background tasks can't open activities anymore, creating a notification is required.
  */
 public class NotificationUtility {
-    public static final String CHANNEL_ID = "k2a_bluetooth_channel";
-    public static final int NOTIFICATION_ID_KEYBOARD = 1;
-    public static final int NOTIFICATION_TIMEOUT_MS = 30_000;
+    private static final String CHANNEL_ID = "k2a_bluetooth_channel";
+    private static final int NOTIFICATION_ID_KEYBOARD = 1;
+    private static final int NOTIFICATION_TIMEOUT_MS = 30_000;
 
     private final Context context;
 
@@ -24,12 +24,18 @@ public class NotificationUtility {
         this.context = context;
     }
 
-    private void registerNotificationChannel() {
+    /**
+     * Register the notification channel to send notifications. This must be done before {@link #notifyTextAvailable(String)}.
+     * This is usually called from the MainActivity's onCreate method.
+     */
+    public void registerNotificationChannel() {
         final NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, context.getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
         notificationChannel.setDescription(context.getString(R.string.notification_channel_description));
         notificationChannel.enableVibration(false);
 
-        context.getSystemService(NotificationManager.class).createNotificationChannel(notificationChannel);
+        final NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        if(notificationManager != null)
+            notificationManager.createNotificationChannel(notificationChannel);
     }
 
     /**
