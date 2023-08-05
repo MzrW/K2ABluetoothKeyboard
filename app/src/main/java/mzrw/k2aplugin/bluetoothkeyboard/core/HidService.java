@@ -181,7 +181,7 @@ public class HidService {
             for (byte[] report : UsbReports.stringToKeystrokeReports(layout, text)) {
                 boolean reportSent = false;
                 int maxRetries = 3; // Define the maximum number of retries for each report
-                int delay = 10;
+                int delay = 25;
 
                 while (!reportSent && maxRetries > 0) {
                     if (bluetoothHidDevice.sendReport(bluetoothDevice, 0x1, report)) {
