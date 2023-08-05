@@ -185,6 +185,7 @@ public class HidService {
                 while (!reportSent && maxRetries > 0) {
                     if (bluetoothHidDevice.sendReport(bluetoothDevice, 0x1, report)) {
                         reportSent = true;
+                        Thread.sleep(100); // Introduce a small delay after typing
                     } else {
                         Log.w(TAG, "Report was not sent. Retrying...");
                         maxRetries--;
