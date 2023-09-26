@@ -13,6 +13,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.lang.Thread;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -178,13 +179,32 @@ public class HidService {
             Log.i(TAG, "sending string " + text);
             updateState(STATE_SENDING);
             for (byte[] report : UsbReports.stringToKeystrokeReports(layout, text)) {
-                if (!bluetoothHidDevice.sendReport(bluetoothDevice, 0x1, report)) {
-                    Log.w(TAG, "Report was not sent");
+                boolean reportSent = false;
+                int maxRetries = 3; // Define the maximum number of retries for each report
+                int delay = 25;
 
+                while (!reportSent && maxRetries > 0) {
+                    if (bluetoothHidDevice.sendReport(bluetoothDevice, 0x1, report)) {
+                        reportSent = true;
+                    } else {
+                        Log.w(TAG, "Report was not sent. Retrying...");
+                        maxRetries--;
+                        delay += 50;
+                    }
+                    try {
+                        Thread.sleep(delay);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (!reportSent) {
+                    Log.e(TAG, "Failed to send report after multiple retries. Aborting sending process.");
+                    return; // Abort the sending process if a report cannot be sent after retries
                 }
             }
-            Log.i(TAG, "reports are completely sent");
 
+            Log.i(TAG, "All reports are completely sent");
             updateState(STATE_SENT);
         });
     }
